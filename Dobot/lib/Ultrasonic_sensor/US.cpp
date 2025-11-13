@@ -1,53 +1,48 @@
-#define F_CPU 16000000UL   // 16 MHz
+//#define F_CPU 16000000UL   // 16 MHz
 #include <avr/io.h>
 #include <util/delay.h>
 #include <stdlib.h>
 #include "triggerAction.h"   // include our external header
 #include "US.h"            // include our ultrasonic sensor header
+  
 
+//uart_init(9600); // Initialise serial monitor at 115200 baud
 
-int main(void) { // Program entry point
-    float duration, distance; // Declares floating point variables
+int Detect(){ // Infinite loop
+    // Send ultrasonic pulse
+    triggerAction_init(); // Initialize LED pin (defined in triggerAction.h)
 
-    // Configure ultrasonic sensor pins
     DDRD |= (1 << TRIG_PIN);   // TRIG = output
     DDRD &= ~(1 << ECHO_PIN);  // ECHO = input
 
-    
-    triggerAction_init(); // Initialize LED pin (defined in triggerAction.h)
+    PORTD &= ~(1 << TRIG_PIN); // Turn Trig pin off
+    _delay_us(2); // Wait 2 uS
+    PORTD |= (1 << TRIG_PIN); // Turn Trig pin on (Start pulse)
+    _delay_us(10); // Wait 10 uS (Pulse width)
+    PORTD &= ~(1 << TRIG_PIN); // Turn Trig pin off (End pulse)
 
-    //uart_init(9600); // Initialise serial monitor at 115200 baud
+    // Measure echo pulse
+    float duration = (float)pulseIn(ECHO_PIN, 1); // Measure how long echo pin stays high
+    float distance = (duration * 0.0343f) / 2.0f; // Distance = duration of pulse * 
+    // Speed of sound (cm/uS), divide by 2 for travel to and from times.
 
-    int Detect(){ // Infinite loop
-        // Send ultrasonic pulse
-        PORTD &= ~(1 << TRIG_PIN); // Turn Trig pin off
-        _delay_us(2); // Wait 2 uS
-        PORTD |= (1 << TRIG_PIN); // Turn Trig pin on (Start pulse)
-        _delay_us(10); // Wait 10 uS (Pulse width)
-        PORTD &= ~(1 << TRIG_PIN); // Turn Trig pin off (End pulse)
+    // If distance < 5 cm, turn LED ON via triggerAction
+    if (distance > 0 && distance < 4.0f) { // If distance greater than 0 and less than 4 cm...
+        triggerAction(1);   // Turn LED ON
+        return true;
+    } else { // In any other condition
+        triggerAction(0);   // Turn LED OFF
+        return false;
+    }
 
-        // Measure echo pulse
-        duration = (float)pulseIn(ECHO_PIN, 1); // Measure how long echo pin stays high
-        distance = (duration * 0.0343f) / 2.0f; // Distance = duration of pulse * 
-        // Speed of sound (cm/uS), divide by 2 for travel to and from times.
+    // Print distance
+    //uart_print("Distance: "); // Print over serail monitor
+    //uart_print_float(distance); // Followed by distance value
+    //uart_print(" cm\r\n"); // Followed by cm and line break
 
-        // If distance < 5 cm, turn LED ON via triggerAction
-        if (distance > 0 && distance < 4.0f) { // If distance greater than 0 and less than 4 cm...
-            triggerAction(1);   // Turn LED ON
-            return true;
-        } else { // In any other condition
-            triggerAction(0);   // Turn LED OFF
-            return false;
-        }
+    // _delay_ms(100); // Delay 100ms
+} 
 
-        // Print distance
-        //uart_print("Distance: "); // Print over serail monitor
-        //uart_print_float(distance); // Followed by distance value
-        //uart_print(" cm\r\n"); // Followed by cm and line break
-
-       // _delay_ms(100); // Delay 100ms
-    } 
-}
 
 // --- UART setup ---
 void uart_init(unsigned int baud) { // Initialises hardware UART

@@ -4,6 +4,7 @@
 #include <Frame_h.h>
 #include <util/delay.h>
 #include <stdlib.h>
+#include <US.h>
 
 
 Dobot myDobot;
@@ -37,6 +38,18 @@ int main() {
       // get and print the current pose of the Dobot
       myDobot.printPose();
       _delay_ms(500); // Debounce delay
+    }
+  }
+  if (button_A4_pressed()) {
+    while (1) {
+    int block =  Detect(); // Call Detect function
+    _delay_ms(500); // Debounce delay
+    if (block) {
+        // If an object is detected within 4 cm
+        //myDobot.printPose(); // Print current pose
+        //_delay_ms(500); // Debounce delay
+      }
+
     }
   }
 }

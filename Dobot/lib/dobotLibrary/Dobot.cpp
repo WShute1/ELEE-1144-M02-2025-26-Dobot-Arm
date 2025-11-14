@@ -57,6 +57,7 @@ for(i=0;i<=3;i++){
   pol[2].cByte[i] = message[i+29];
   pol[3].cByte[i] = message[i+33];
 }
+
 Serial.print("Cartesian: ");
 Serial.print(cart[0].cFloat);  //The union type means the float equivalent is available
 Serial.print(" ");
@@ -81,10 +82,9 @@ Serial.print(' ');
 }
 Serial.println();
 delay(1000);
+
 }
 //////////////////////////////////////////////////////////////////////////////
-
-
 
 
 void Dobot::commandFrame(byte comFrame[]){

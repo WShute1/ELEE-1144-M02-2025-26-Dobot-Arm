@@ -12,7 +12,6 @@ Dobot myDobot;
 void setup() {
   myDobot.begin();
   button_init();
-
 }
 
 int main() {
@@ -26,30 +25,34 @@ int main() {
 
   homing(); // Perform homing first
 
-  _delay_ms(1000); // Wait for homing to complete
+  _delay_ms(5000); // Wait for homing to complete
 
   setPTPCmd(mode, x, y, z, rHead); // Move to specified position
 
-  _delay_ms(1000);
+  _delay_ms(5000);
+
+  setEndEffectorSuctionCmd(1 , 1); // Enable suction on suction cup 
+  _delay_ms(2000);
+  setEndEffectorSuctionCmd(0 , 0); // Disable suction on suction cup 
 
   while (1) {
     // Check if button A3 is pressed
-    if (button_A3_pressed()) {
+    if (button_A3_pressed()){
       // get and print the current pose of the Dobot
       myDobot.printPose();
       _delay_ms(500); // Debounce delay
-    }
-  }
-  if (button_A4_pressed()) {
-    while (1) {
-    int block =  Detect(); // Call Detect function
-    _delay_ms(500); // Debounce delay
-    if (block) {
-        // If an object is detected within 4 cm
-        //myDobot.printPose(); // Print current pose
-        //_delay_ms(500); // Debounce delay
       }
-
-    }
+    else if (button_A4_pressed()){
+      int block =  Detect(); // Call Detect function
+      _delay_ms(500); // Debounce delay
+      setEndEffectorSuctionCmd(0 , 0); // Disable suction on suction cup
+      char buf[12];
+      itoa(block, buf, 10);
+      uart_print(buf); // Print detected block value over UART
+      }
+    else if (button_A5_pressed()){
+      setEndEffectorSuctionCmd(1 , 1); // Enable suction on suction cup
+      _delay_ms(500); // Debounce delay
+      }
   }
 }

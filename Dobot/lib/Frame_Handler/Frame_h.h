@@ -19,5 +19,6 @@ uint8_t calcChecksum(uint8_t *frame, int start, int end);
 
 void setPTPCmd(int mode, float x, float y, float z, float rHead);
 void homing();
+void setEndEffectorSuctionCmd(uint8_t enable, uint8_t suctionCup);
 
 #endif

@@ -1,68 +1,76 @@
-#include <vector>
-
 // To use functions replace all unsigned int with uint8_t
 // Create a vector with the command params inside it
 // LoadDataPacket will load all the data required into a vector using the correct format including little endian for params, it will also generate a checksum and add it to the end of the data packet.
 
+using namespace std;
+#include <iostream>
 //Function prototype for header file
-void AutoCheckSum(vector<unsigned int>* payload);
-void LoadDataPacket(vector<unsigned int>* emptyDataPacket, unsigned int* Header,
-                    unsigned int* ID, unsigned int* len, unsigned int* RW,
-                    unsigned int* isQueued, vector<unsigned int> *params);
+
+struct DataPacket{
+    unsigned int Header;
+    unsigned int len;
+    unsigned int ID;
+    unsigned int RW;
+    unsigned int isQueued;
+    unsigned int CTRL;
+    unsigned int numParams;
+    unsigned int params[16];
+    unsigned int CheckSum;
+} DataPacket_to_DOBOT;
+
+void AutoCheckSum(struct DataPacket *emptyDataPacket);
+void LoadDataPacket(struct DataPacket *emptyDataPacket);
 
 
-void main(void){
-    unsigned int Header = 0xAA;
-    unsigned int ID = 31;
-    unsigned int len = 3;
-    unsigned int isQueued = 1;
-    unsigned int RW = 1;
-    vector<unsigned int> Params = {0x00};
-    vector<unsigned int> dataPacket;
-    LoadDataPacket(&dataPacket, &Header, &ID, &len, &RW, &isQueued, &Params);
-    for(int i = 0; i < dataPacket.size();i++){
-       cout << dataPacket[i] << "\n"; 
-    }
-    
+
+int main(void){
+    DataPacket_to_DOBOT.Header = 0xAA;
+    DataPacket_to_DOBOT.ID = 31;
+    DataPacket_to_DOBOT.len = 3;
+    DataPacket_to_DOBOT.isQueued = 1;
+    DataPacket_to_DOBOT.RW = 1;
+    DataPacket_to_DOBOT.numParams = 5;
+    DataPacket_to_DOBOT.params[0] = {0x00};
+    DataPacket_to_DOBOT.params[1] = {0x01};
+    DataPacket_to_DOBOT.params[2] = {0x02};
+    DataPacket_to_DOBOT.params[3] = {0x03};
+    DataPacket_to_DOBOT.params[4] = {0x04};
+   
+    LoadDataPacket(&DataPacket_to_DOBOT);
+    cout << DataPacket_to_DOBOT.Header << "\n";
+    cout << DataPacket_to_DOBOT.Header << "\n";
+    cout << DataPacket_to_DOBOT.len << "\n";
+    cout << DataPacket_to_DOBOT.CTRL << "\n";
+   
+    cout << DataPacket_to_DOBOT.params[0] << "\n";
+    cout << DataPacket_to_DOBOT.params[1] << "\n";
+    cout << DataPacket_to_DOBOT.params[2] << "\n";
+    cout << DataPacket_to_DOBOT.params[3] << "\n";
+    cout << DataPacket_to_DOBOT.params[4] << "\n";
+    cout << DataPacket_to_DOBOT.CheckSum << "\n";
+   
 }
 
 
 //Function Definition
-void AutoCheckSum(vector<unsigned int>* payload){
-    unsigned int Packet_Size = (*payload).size();
-    unsigned int CheckSum = 0;
-    for(int scan = 3; scan < Packet_Size; scan++){
-        CheckSum += (*payload).at(scan);
+void AutoCheckSum(struct DataPacket *tempDataPacket){
+    unsigned int Sum = 0;
+    Sum += (*tempDataPacket).ID;
+    Sum += (*tempDataPacket).CTRL;
+    for(int scan = 0; scan < (*tempDataPacket).numParams; scan++){
+        Sum += (*tempDataPacket).params[scan];
     }
-    CheckSum = 256 - CheckSum;
-    (*payload).push_back(CheckSum);
+    (*tempDataPacket).CheckSum = 256 - Sum;
 }
 
-void LoadDataPacket(vector<unsigned int>* emptyDataPacket, unsigned int *Header,
-                    unsigned int *ID, unsigned int *len, unsigned int *RW,
-                    unsigned int *isQueued, vector<unsigned int>* Params){
-                        unsigned int NumParams = (*len) - 2;
-                        unsigned int CTRL = ((*isQueued) << 1) | (*RW);
-                        (*emptyDataPacket).assign(2 ,*Header);
-                        (*emptyDataPacket).push_back(*len);
-                        (*emptyDataPacket).push_back(*ID);
-                        (*emptyDataPacket).push_back(CTRL);
-                        for(int scan = 0; scan < NumParams; scan++){
-                            (*emptyDataPacket).push_back((*Params).back());
-                            (*Params).pop_back();
+void LoadDataPacket(struct DataPacket *tempDataPacket){
+                        (*tempDataPacket).CTRL = (((*tempDataPacket).isQueued) << 1) | (*tempDataPacket).RW;
+                        unsigned int swap =  0;
+                        for(int scan = 0; scan < ((*tempDataPacket).numParams)/2; scan++){
+                            swap = (*tempDataPacket).params[scan];
+                            (*tempDataPacket).params[scan] = (*tempDataPacket).params[(*tempDataPacket).numParams - scan - 1];
+                            (*tempDataPacket).params[(*tempDataPacket).numParams - scan - 1] = swap;
                         }
-                        AutoCheckSum(emptyDataPacket);
-
+                        AutoCheckSum(tempDataPacket);
 }
-//use vectors for payload they are resizable arrays. 
-//use this to take an vector array and sum all the elements in the payload part of the command packet
-// resize the command packet adding the checksum to the end of the packet.
-
-// in main file define the command packet as a vector of unsigned int.
-// define the size of the vector based on the command to the robot. 
-// define the param size using #define <name> "number" format 
-// use pointer to move the vector in and out of the function 
-
-// write function that defines and builds a datapacket. remembing to make multiple byte little endian as per datasheet
-
 

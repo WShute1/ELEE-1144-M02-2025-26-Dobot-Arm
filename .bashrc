@@ -1,0 +1,1 @@
+export PATH=$PATH:"/c/Users/Michael/Programs/w64devkit/bin"

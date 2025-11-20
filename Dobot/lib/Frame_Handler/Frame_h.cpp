@@ -22,7 +22,7 @@ void homing() {
     comFrame[7] = 0;
     comFrame[8] = 0;
     int checksum = calcChecksum(comFrame, 3, 4);
-    comFrame[5] = checksum; // Payload checksum - 1 for end
+    comFrame[9] = checksum; // Payload checksum - 1 for end
 
     // Send command to Dobot
     myDobot.commandFrame(comFrame);
@@ -35,7 +35,7 @@ uint8_t calcChecksum(uint8_t *frame, int start, int end) {
     for (int i = start; i <= end; ++i) {
         sum += frame[i];
     }
-    return (int)(sum & 0xFF);
+    return (int)(256 - sum);
 }
 
 // Function to handle PTP (Point-to-Point) movement in bare C
@@ -72,7 +72,7 @@ void setEndEffectorSuctionCmd(uint8_t enable, uint8_t suctionCup) {
     uint8_t comFrame[10];
     int len = 4;
     int ID = 62;    // ID of the command
-    int CRTL = 1; // 3 for quueued execution and 1 for not queued
+    int CRTL = 3; // 3 for quueued execution and 1 for not queued
 
     // Command structure for setEndEffectorSuctionCmd
     comFrame[0] = 0xAA;  // Command ID for setEndEffectorSuctionCmd
@@ -83,7 +83,7 @@ void setEndEffectorSuctionCmd(uint8_t enable, uint8_t suctionCup) {
     comFrame[5] = enable; // Enable or disable suction
     comFrame[6] = suctionCup; // Suction cup ID
 
-    int checksum = calcChecksum(comFrame, 2, 6);
+    int checksum = calcChecksum(comFrame, 3, 6);
     comFrame[7] = checksum; // Payload checksum - 1 for end
 
     // Send command to Dobot

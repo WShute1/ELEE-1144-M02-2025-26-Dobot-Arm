@@ -1,8 +1,8 @@
 #ifndef US_H
 #define US_H
 
-#define TRIG_PIN PD2 // Define Trigger pin as Digital Pin 2
-#define ECHO_PIN PD3 // Define Echo pin as Digital Pin 2
+#define TRIG_PIN PD5 // Define Trigger pin as Digital Pin 5
+#define ECHO_PIN PD6 // Define Echo pin as Digital Pin 6
 
 void uart_init(unsigned int baud);
 void uart_transmit(char data);

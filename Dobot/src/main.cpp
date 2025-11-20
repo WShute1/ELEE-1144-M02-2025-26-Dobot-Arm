@@ -180,7 +180,7 @@ int mode = 1;
         _delay_ms(2000);
       setPTPCmd(mode,  185.13, -136.87, 65.37, -64.68); // Go to redStorage HIGH
         _delay_ms(2000);
-      setPTPCmd(mode,  180.82, -125.47, 10.00, -64.68); // Go to redStorage 'Space 3'
+      setPTPCmd(mode,  180.82, -125.47, 10.00, 50); // Go to redStorage 'Space 3'
         _delay_ms(2000);
       setEndEffectorSuctionCmd(1 , 0); //Turn suctionCup OFF
         _delay_ms(500);

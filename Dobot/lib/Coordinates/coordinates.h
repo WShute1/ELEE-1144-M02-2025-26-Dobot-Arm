@@ -2,6 +2,7 @@
 #define COORDINATES_H
 
 #include <stdint.h>
+#include <avr/io.h>
 
 typedef struct {
     float x;

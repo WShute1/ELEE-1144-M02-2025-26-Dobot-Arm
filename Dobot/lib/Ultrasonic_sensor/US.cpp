@@ -46,7 +46,7 @@ int Detect(){ // Infinite loop
 
 
 // --- UART setup ---
-void uart_init(unsigned int baud) { // Initialises hardware UART
+void uart_init(unsigned long baud) { // Initialises hardware UART
     unsigned int ubrr = F_CPU / 16 / baud - 1; // Sets baud rate
     UBRR0H = (unsigned char)(ubrr >> 8); // Sets baud rate
     UBRR0L = (unsigned char)ubrr; // Sets baud rate

@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <US.h>
 #include <coordinates.h>
+#include <RGB.h>
 #include<Arduino.h>
 
 
@@ -28,12 +29,12 @@ void setup() {
 
 int main(void) {
   // Example: Move arm to position (10, 10, 10) in MOVJ_XYZ mode
-  int count = 0;
   int redCount = 0;
   int greenCount = 0;
   int blueCount = 0;
-  int delay = 500;
   int mode = 1; // MOVJ_XYZ mode
+  int object;
+  int colour;
 
   switch (state) {
     case INITIALISE: // Initialise
@@ -41,8 +42,9 @@ int main(void) {
       state = READY;
       uart_print("Initialisation complete. System is READY.\r\n");
     break;
+
     case READY: // detect block
-      int object =  Detect(); // Call Detect function
+      object =  Detect(); // Call Detect function
 
       if (button_A3_pressed()){
         state = RETRIEVE_BLUE_BLOCK; 
@@ -68,11 +70,26 @@ int main(void) {
       if (object == 1){
         state = IDENTIFY_BLOCK_COLOUR;
         uart_print("Object Detected\r\n");
+        break;
       }
 
-    break;
     case IDENTIFY_BLOCK_COLOUR: // detect block colour
-    
+      colour = Detect_colour(); // Call colour detection function
+
+      if (colour == 1){
+        uart_print("Red Block Detected\r\n");
+        state = MOVE_TO_RED;
+      }
+
+      if (colour == 2){
+        uart_print("Green Block Detected\r\n");
+        state = MOVE_TO_GREEN;
+      }
+
+      if (colour == 3){
+        uart_print("Blue Block Detected\r\n");
+        state = MOVE_TO_BLUE;
+      }
      
     break;
     case MOVE_TO_BLUE: // move to red
@@ -256,9 +273,10 @@ int main(void) {
       
     break;
 
-  default:
-  // Handle unknown color
+    default:
+      uart_print("Error: Unknown state\r\n");
+      state = READY;
     break;
-  }
+    }
 
 }

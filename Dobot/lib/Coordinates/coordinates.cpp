@@ -1,5 +1,6 @@
 #include "coordinates.h"
 #include "../dobotLibrary/Dobot.h"
+#include <Frame_h.h>
 #include <avr/io.h>
 
 const Point points[POINT_COUNT] = {
@@ -25,8 +26,63 @@ const Point points[POINT_COUNT] = {
     [POINT_pickUpLow] = {20.65f, -278.84f, -51.08f, -113.97f},
 };
 
-void moveToPose(uint8_t mode, PoseId id)
+void moveToPose(uint8_t mode, PointId id)
 {
-    const Pose *p = &poses[id];
+    const Point *p = &points[id];
     setPTPCmd(mode, p->x, p->y, p->z, p->r);
+}  
+
+void Retrieve(uint8_t mode, PointId storageHigh, PointId storageLow, int delay) {
+    moveToPose(mode, POINT_retrievalHigh);
+    _delay_ms(delay);
+    
+    moveToPose(mode, storageHigh);
+    _delay_ms(delay);
+
+    moveToPose(mode, storageLow);
+    _delay_ms(delay);
+
+    setEndEffectorSuctionCmd(1,1);
+    _delay_ms(500);
+
+    moveToPose(mode, POINT_retrievalHigh);
+    _delay_ms(delay);
+
+    // Use parameter instead of hardcoded blue storage
+    moveToPose(mode, POINT_retrievalLow);
+    _delay_ms(delay);
+
+    setEndEffectorSuctionCmd(1,0);
+    _delay_ms(500);
+
+    moveToPose(mode, POINT_retrievalHigh);
+    _delay_ms(delay);
+
 }   
+
+
+void Storage(uint8_t mode, PointId storageHigh, PointId storageLow, int delay) {
+    moveToPose(mode, POINT_pickUpHigh);
+    _delay_ms(delay);
+
+    moveToPose(mode, POINT_pickUpLow);
+    _delay_ms(delay);  
+
+    setEndEffectorSuctionCmd(1,1);
+    _delay_ms(500);
+
+    moveToPose(mode, POINT_pickUpHigh);
+    _delay_ms(delay);
+
+    moveToPose(mode, storageHigh);
+    _delay_ms(delay);
+
+    moveToPose(mode, storageLow);
+    _delay_ms(delay);
+
+    setEndEffectorSuctionCmd(1,0);
+    _delay_ms(500);
+
+    moveToPose(mode, storageHigh);
+    _delay_ms(delay);
+} 

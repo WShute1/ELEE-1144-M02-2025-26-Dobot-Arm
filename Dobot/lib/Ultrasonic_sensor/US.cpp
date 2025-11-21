@@ -26,8 +26,8 @@ int Detect(){ // Infinite loop
     float distance = (duration * 0.0343f) / 2.0f; // Distance = duration of pulse * 
     // Speed of sound (cm/uS), divide by 2 for travel to and from times.
 
-    // If distance < 5 cm, turn LED ON via triggerAction
-    if (distance > 0 && distance < 2.0f) { // If distance greater than 0 and less than 4 cm...
+    // If distance < 2 cm, turn LED ON via triggerAction
+    if (distance > 0 && distance < 2.0f) { // If distance greater than 0 and less than 2 cm...
         triggerAction(1);   // Turn LED ON
         return true;
     } else { // In any other condition

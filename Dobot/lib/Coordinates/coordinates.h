@@ -40,6 +40,10 @@ typedef enum {
 extern const Point points[POINT_COUNT];
 
 // Convenience wrapper
-void moveTo(uint8_t mode, PointId id);
+void moveToPose(uint8_t mode, PointId id);
+
+void Retrieve(uint8_t mode, PointId storageHigh, PointId storageLow, int delay);
+
+void Storage(uint8_t mode, PointId storageHigh, PointId storageLow, int delay);
 
 #endif

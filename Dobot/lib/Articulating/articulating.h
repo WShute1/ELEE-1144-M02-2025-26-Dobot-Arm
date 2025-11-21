@@ -1,7 +1,7 @@
 #ifndef ARTICULATING_H
 #define ARTICULATING_H
 
-#incude<stdint.h>
+#include <stdint.h>
 #include <avr/io.h>
 
 void articulate(uint8_t mode, int storagePoint);

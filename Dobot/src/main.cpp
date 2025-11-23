@@ -10,9 +10,33 @@
 
 Dobot myDobot;
 
+struct block_positions{
+  unsigned int stacked_red;
+  unsigned int stacked_blue;
+  unsigned int stacked_green;
+}block_counts;
+
+enum STATES{
+  INIT,
+  LOADING,
+  WAITING,
+  RETRIEVE
+};
+
+enum COLOUR{
+  RED,
+  GREEN,
+  BLUE,
+  WOODEN,
+  OUTOFRANGE
+};
+
 void setup() {
   myDobot.begin();
   button_init();
+  enum STATES STATE = INIT;
+  enum COLOUR detected_colour = OUTOFRANGE;
+  enum COLOUR colour_To_retrieve = OUTOFRANGE;
 }
 int mode = 1;
   int red(){
@@ -213,15 +237,117 @@ void loop() {
 
   //_delay_ms(5000);
 
+
+
   //setEndEffectorSuctionCmd(1 , 1); // Enable suction on suction cup 
   //_delay_ms(2000);
   //setEndEffectorSuctionCmd(0 , 0); // Disable suction on suction cup 
   while (1) {
     // Check if button A3 is pressed
     if (button_A3_pressed()){
+      while(complete != 1){
+        switch(STATE){
+          case INIT:
+          //clear dobot queue  
+          //complete homing
+          block_counts.stacked_red = 0;
+          block_counts.stacked_green = 0;
+          block_counts.stacked_blue = 0;
+          STATE = WAITING;
+          break;
+          case LOADING:
+            if(Detect() == 1){
+              detected_colour = Detect_colour();
+              switch (detected_colour){
+                case RED:
+                  red();
+                  block_counts.stacked_red++;
+                  break;
+                case BLUE:
+                  blue();
+                  block_counts.stacked_blue++;
+                  break;
+                case GREEN:
+                  green();
+                  block_counts.stacked_green++;
+                  break;
+                case WOODEN:
+                  Serial.println("Block is not coloured");
+                  break;
+                case OUTOFRANGE:
+                  Serial.println("Block too far from sensor");
+                  Serial.println("Please move block closer to Colour Sensor");
+                  break;
+              }
+              STATE = WAITING;
+            }
+            break;
+          case WAITING:
+            if(Detect() == 1){
+              STATE = LOADING;
+            }
+            else{
+              if(button_A3_pressed()){
+                if(block_counts.stacked_red > 0){
+                  colour_To_retrieve = RED;
+                  STATE = RETRIEVE;
+                }
+                else{
+                  Serial.println("No more red blocks in storage area.");
+                  Serial.println("Please select another colour to retrieve.");
+                }
+              }
+              if(button_A4_pressed()){
+                if(block_counts.stacked_green > 0){
+                  colour_To_retrieve = GREEN;
+                  STATE = RETRIEVE;
+                }
+                else{
+                  Serial.println("No more green blocks in storage area.");
+                  Serial.println("Please select another colour to retrieve.");
+                }
+              }
+              if(button_A5_pressed()){
+                if(block_counts.stacked_blue> 0){
+                  colour_To_retrieve = BLUE;
+                  STATE = RETRIEVE;
+                }
+                else{
+                  Serial.println("No more blue blocks in storage area.");
+                  Serial.println("Please select another colour to retrieve.");
+                }
+              }
+            }
+            break;
+          case RETRIEVE:
+            switch (colour_To_retrieve){
+                case RED:
+                  retreive_red(block_counts.stacked_red);
+                  block_counts.stacked_red--;
+                  break;
+                case BLUE:
+                  retreive_blue(block_counts.stacked_blue);
+                  block_counts.stacked_blue--;
+                  break;
+                case GREEN:
+                  retreive_green(block_counts.stacked_green);
+                  block_counts.stacked_green--;
+                  break;
+                case WOODEN:
+                  Serial.println("Wooden blocks are not stored, can not retrieve.");
+                  break;
+                case OUTOFRANGE:
+                  Serial.println("ERROR - colour_To_retrieve remained or was set to its default value.");
+                  break;
+            }
+            STATE = WAITING;
+            break;
+        }
+      }
+    }
       //red();
       //green();
-      blue();
+      //blue();
       }
     if (button_A4_pressed()){
       int block =  Detect(); // Call Detect function

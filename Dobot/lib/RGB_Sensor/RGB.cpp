@@ -73,15 +73,8 @@ void getColors(void)
     Green = pulseIn_high();
 }
 
-int Detect_colour()
-{
-    enum COLOUR detectedColour;
-    enum COLOUR colourSamples[SAMPLE_COUNT];
-    uint8_t i;
-    uint16_t sum = 0;
-    uint8_t detectedColourAvg;
-
-    // Setup pins
+void ColourSensor_Init(void){
+        // Setup pins
     DDRD |= (1 << PD0) | (1 << PD1);
     DDRB |= (1 << PB2) | (1 << PB3);
     DDRB &= ~(1 << PB4);
@@ -94,6 +87,15 @@ int Detect_colour()
     // TCS3200 100% scaling
     S0_HIGH;
     S1_HIGH;
+}
+
+int Detect_colour()
+{
+    //enum COLOUR detectedColour;
+    enum COLOUR colourSamples[SAMPLE_COUNT];
+    uint8_t i;
+    uint16_t sum = 0;
+    uint8_t detectedColourAvg;
 
         uart_print("Averaging...\n\n");
         // Take 50 samples

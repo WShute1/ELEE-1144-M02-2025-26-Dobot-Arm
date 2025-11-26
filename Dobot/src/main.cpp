@@ -20,6 +20,7 @@ States state = INITIALISE;
 void setup() {
   myDobot.begin();
   button_init();
+  ColourSensor_Init();
   uart_init(115200); // Initialise serial monitor at 115200 baud
   homing();
   uart_print("Homing started...\r\n");
@@ -28,7 +29,6 @@ void setup() {
 }
 
 int main(void) {
-  // Example: Move arm to position (10, 10, 10) in MOVJ_XYZ mode
   int redCount = 0;
   int greenCount = 0;
   int blueCount = 0;
@@ -44,34 +44,36 @@ int main(void) {
     break;
 
     case READY: // detect block
-      object =  Detect(); // Call Detect function
+      while(1){
+        object =  Detect(); // Call Detect function
+        if(object == true){
+          state = IDENTIFY_BLOCK_COLOUR;
+          _delay_ms(50); 
+          uart_print("Object Detected\r\n");
+          break;
+        }
+        if (button_A3_pressed()){
+          state = RETRIEVE_BLUE_BLOCK; 
+          _delay_ms(50); // Debounce delay
+          uart_print("Blue Button Pressed\r\n");
+          break;
+        }
 
-      if (button_A3_pressed()){
-        state = RETRIEVE_BLUE_BLOCK; 
-        _delay_ms(50); // Debounce delay
-        uart_print("Blue Button Pressed\r\n");
-        break;
-      }
+        if (button_A4_pressed()){
+          state = RETRIEVE_GREEN_BLOCK;
+          _delay_ms(50); // Debounce delay
+          uart_print("Green Button Pressed\r\n");
+          break;
+        }
 
-      if (button_A4_pressed()){
-        state = RETRIEVE_GREEN_BLOCK;
-        _delay_ms(50); // Debounce delay
-        uart_print("Green Button Pressed\r\n");
-        break;
-      }
-
-      if (button_A5_pressed()){
-        state = RETRIEVE_RED_BLOCK;
-        _delay_ms(50); // Debounce delay
-        uart_print("Red Button Pressed\r\n");
-        break;
-      }
-
-      if (object == 1){
-        state = IDENTIFY_BLOCK_COLOUR;
-        uart_print("Object Detected\r\n");
-        break;
-      }
+        if (button_A5_pressed()){
+          state = RETRIEVE_RED_BLOCK;
+          _delay_ms(50); // Debounce delay
+          uart_print("Red Button Pressed\r\n");
+          break;
+        }
+    }
+    break;
 
     case IDENTIFY_BLOCK_COLOUR: // detect block colour
       colour = Detect_colour(); // Call colour detection function
@@ -98,7 +100,6 @@ int main(void) {
         blueCount++;
         uart_print("Moving to Blue Storage\r\n");
         state = READY;
-        break;
       }
 
       if (blueCount == 1){
@@ -106,7 +107,6 @@ int main(void) {
         blueCount++;
         uart_print("Blue Block Stored\r\n");
         state = READY;
-        break;
       }
 
       if (blueCount == 2){
@@ -114,7 +114,6 @@ int main(void) {
         blueCount++;
         uart_print("Blue Block Stored\r\n");
         state = READY;
-        break;
       }
 
       if (blueCount > 3){
@@ -130,7 +129,6 @@ int main(void) {
         greenCount++;
         uart_print("Moving to Green Storage\r\n");
         state = READY;
-        break;
       }
 
       if (greenCount == 1){
@@ -138,7 +136,6 @@ int main(void) {
         greenCount++;
         uart_print("Green Block Stored\r\n");
         state = READY;
-        break;
       }
 
       if (greenCount == 2){
@@ -146,7 +143,6 @@ int main(void) {
         greenCount++;
         uart_print("Green Block Stored\r\n");
         state = READY;
-        break;
       }
 
       if (greenCount > 3){
@@ -161,7 +157,6 @@ int main(void) {
         redCount++;
         uart_print("Moving to Red Storage\r\n");
         state = READY;
-        break;
       } 
 
       if (redCount == 1){
@@ -169,7 +164,6 @@ int main(void) {
         redCount++;
         uart_print("Red Block Stored\r\n");
         state = READY;
-        break;
       } 
 
       if (redCount == 2){
@@ -177,7 +171,6 @@ int main(void) {
         redCount++;
         uart_print("Red Block Stored\r\n");
         state = READY;
-        break;
       }
 
       if (redCount > 3){

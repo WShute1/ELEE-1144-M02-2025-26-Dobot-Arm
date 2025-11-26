@@ -6,6 +6,8 @@
 uint32_t pulseIn_high(void);
 void getColors(void);
 int Detect_colour();
+void ColourSensor_Init(void);
+
 
 
 #endif

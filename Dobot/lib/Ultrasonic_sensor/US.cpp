@@ -8,7 +8,7 @@
 
 //uart_init(9600); // Initialise serial monitor at 115200 baud
 
-int Detect(){ // Infinite loop
+bool Detect(){ // Infinite loop
     // Send ultrasonic pulse
     triggerAction_init(); // Initialize LED pin (defined in triggerAction.h)
 
@@ -40,8 +40,7 @@ int Detect(){ // Infinite loop
     //uart_print_float(distance); // Followed by distance value
     //uart_print(" cm\r\n"); // Followed by cm and line break
 
-    // _delay_ms(100); // Delay 100ms
-    return 1;
+    // _delay_ms(100); // Delay 100ms;
 } 
 
 

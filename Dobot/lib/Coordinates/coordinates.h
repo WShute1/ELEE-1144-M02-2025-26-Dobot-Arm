@@ -11,6 +11,8 @@ typedef struct {
     float r;
 } Point;
 
+
+
 typedef enum {
     POINT_retrievalLow,
     POINT_retrievalHigh,

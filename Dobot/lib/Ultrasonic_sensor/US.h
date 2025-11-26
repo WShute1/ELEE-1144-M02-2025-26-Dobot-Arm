@@ -6,7 +6,6 @@
 
 void uart_init(unsigned int baud);
 void uart_transmit(char data);
-void uart_print(const char *str);
 void uart_print_float(float value); 
 unsigned long pulseIn(uint8_t pin, uint8_t state); // Function declaration
 int Detect(); // Function declaration

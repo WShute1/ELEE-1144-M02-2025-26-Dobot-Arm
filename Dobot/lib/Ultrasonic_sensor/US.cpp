@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "triggerAction.h"   // include our external header
 #include "US.h"            // include our ultrasonic sensor header
+#include <RGB_sensor.h>
   
 
 //uart_init(9600); // Initialise serial monitor at 115200 baud
@@ -59,9 +60,6 @@ void uart_transmit(char data) {
     UDR0 = data; // Send byte
 }
 
-void uart_print(const char *str) {
-    while (*str) uart_transmit(*str++); // Transmit a string, character by character
-}
 
 void uart_print_float(float value) { // Converts float to string with 2 decimal places
     char buffer[16];

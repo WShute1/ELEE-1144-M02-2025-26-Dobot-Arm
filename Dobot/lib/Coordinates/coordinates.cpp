@@ -20,7 +20,7 @@ float rx = 76.00;
 float ry = -226.00;
 
 float gx = 129.00;
-float gy = 174.00;
+float gy = -174.00;
 
 float bx = 180.00;
 float by = -122.00;

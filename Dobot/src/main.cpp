@@ -29,9 +29,9 @@ void setup() {
 }
 
 void loop() {
-  static int redCount = 3;
-  static int greenCount = 3;
-  static int blueCount = 3;
+  static int redCount = 0;
+  static int greenCount = 0;
+  static int blueCount = 0;
 
   int mode = 1; // MOVJ_XYZ mode
   int object;
@@ -73,30 +73,26 @@ void loop() {
           Serial.print("Red Button Pressed\r\n");
           break;
         }
-    //}
-    break;
+      //}
+      break;
 
     case IDENTIFY_BLOCK_COLOUR: // detect block colour
       colour = Detect_colour(); // Call colour detection function
 
-      if (colour == 1){
+      if (colour == 5){
         Serial.print("Red Block Detected\r\n");
         state = MOVE_TO_RED;
-        break;
       }
 
-      if (colour == 2){
+      else if (colour == 2){
         Serial.print("Green Block Detected\r\n");
         state = MOVE_TO_GREEN;
-        break;
       }
 
-      if (colour == 3){
+      else if (colour == 3){
         Serial.print("Blue Block Detected\r\n");
         state = MOVE_TO_BLUE;
-        break;
       }
-     
     break;
     case MOVE_TO_BLUE: // move to red
       if (blueCount == 0){
@@ -123,7 +119,7 @@ void loop() {
         break;
       }
 
-      if (blueCount > 3){
+      if (blueCount >= 3){
         Serial.print("Blue Storage Full\r\n");
         state = READY;
       }
@@ -186,7 +182,7 @@ void loop() {
         break;
       }
 
-      if (redCount > 3){
+      if (redCount >= 3){
         Serial.print("Red Storage Full\r\n");
         state = READY;
       }

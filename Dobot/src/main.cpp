@@ -45,14 +45,14 @@ void loop() {
     break;
 
     case READY: // detect block
-      while(1){
-       // object = Detect(); // Call Detect function
-       // if(object == true){
-        //  state = IDENTIFY_BLOCK_COLOUR;
-        //  _delay_ms(50); 
-         // Serial.print("Object Detected\r\n");
-         // break;
-        //}
+      //while(1){
+       object = Detect(); // Call Detect function
+       if(object == true){
+          state = IDENTIFY_BLOCK_COLOUR;
+          _delay_ms(50); 
+          Serial.print("Object Detected\r\n");
+          break;
+        }
         if (button_A3_pressed()){
           state = RETRIEVE_BLUE_BLOCK; 
           _delay_ms(50); // Debounce delay
@@ -73,7 +73,7 @@ void loop() {
           Serial.print("Red Button Pressed\r\n");
           break;
         }
-    }
+    //}
     break;
 
     case IDENTIFY_BLOCK_COLOUR: // detect block colour
@@ -82,16 +82,19 @@ void loop() {
       if (colour == 1){
         Serial.print("Red Block Detected\r\n");
         state = MOVE_TO_RED;
+        break;
       }
 
       if (colour == 2){
         Serial.print("Green Block Detected\r\n");
         state = MOVE_TO_GREEN;
+        break;
       }
 
       if (colour == 3){
         Serial.print("Blue Block Detected\r\n");
         state = MOVE_TO_BLUE;
+        break;
       }
      
     break;
@@ -152,7 +155,7 @@ void loop() {
         break;
       }
 
-      if (greenCount > 3){
+      if (greenCount >= 3){
         Serial.print("Green Storage Full\r\n");
         state = READY;
       }  

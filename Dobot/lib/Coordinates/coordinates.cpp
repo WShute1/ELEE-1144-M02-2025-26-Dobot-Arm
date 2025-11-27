@@ -2,12 +2,13 @@
 #include "../dobotLibrary/Dobot.h"
 #include <Frame_h.h>
 #include <avr/io.h>
+#include <Arduino.h>
 
 //coordinates grid defined by visio drawings and measurements
 float highZ = 80.00;
 float lowZ1 = -50.00;
 float lowZ2 = -20.00;
-float lowZ3 = 10.00;
+float lowZ3 = 6.00;
 
 float lx = 20.00;
 float ly = -278.00;
@@ -59,9 +60,17 @@ void Retrieve(uint8_t mode, PointId storageHigh, PointId storageLow, int delay) 
     _delay_ms(delay);
     
     moveToPose(mode, storageHigh);
+    Serial.print(points[storageHigh].x);
+    Serial.print(points[storageHigh].y);
+    Serial.print(points[storageHigh].z);
+    Serial.print(points[storageHigh].r);
     _delay_ms(delay);
 
     moveToPose(mode, storageLow);
+    Serial.print(points[storageLow].x);
+    Serial.print(points[storageLow].y);
+    Serial.print(points[storageLow].z);
+    Serial.print(points[storageLow].r);
     _delay_ms(delay);
 
     setEndEffectorSuctionCmd(1,1);

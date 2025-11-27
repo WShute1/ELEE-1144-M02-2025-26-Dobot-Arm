@@ -9,7 +9,7 @@ void homing() {
     uint8_t comFrame[10];
     int len = 6;
     int ID = 31;    // ID of the homing command
-    int CRTL = 3; // 3 for quueued execution and 1 for not queued
+    int CRTL = 1; // 3 for quueued execution and 1 for not queued
 
     // Command structure for homing
     comFrame[0] = 0xAA;  // Command ID for homing

@@ -46,7 +46,7 @@ void setPTPCmd(int mode, float x, float y, float z, float rHead) {
     uint8_t comFrame[20];
     int len = 19;
     int ID = 84;    // ID of the command
-    int CRTL = 1; // 3 for quueued execution and 1 for not queued
+    int CRTL = 3; // 3 for quueued execution and 1 for not queued
     
     // Command structure for setPTPcmd
     comFrame[0] = 0xAA;  // Command ID for setPTPcmd

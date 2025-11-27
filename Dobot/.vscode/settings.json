@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "adc": "c"
+        "adc": "c",
+        "functional": "cpp",
+        "memory": "cpp"
     }
 }

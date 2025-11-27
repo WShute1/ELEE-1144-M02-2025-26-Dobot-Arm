@@ -21,10 +21,11 @@ void setup() {
   myDobot.begin();
   button_init();
   ColourSensor_Init();
-  //homing();
+  homing();
   Serial.print("Homing started...\r\n");
-  _delay_ms(2000);
+  _delay_ms(10000);
   Serial.print("wait 10 sec...\r\n");
+  setEndEffectorSuctionCmd(1,0);
 
 }
 
@@ -45,7 +46,6 @@ void loop() {
     break;
 
     case READY: // detect block
-      //while(1){
        object = Detect(); // Call Detect function
        if(object == true){
           state = IDENTIFY_BLOCK_COLOUR;
@@ -73,7 +73,6 @@ void loop() {
           Serial.print("Red Button Pressed\r\n");
           break;
         }
-      //}
       break;
 
     case IDENTIFY_BLOCK_COLOUR: // detect block colour
@@ -96,7 +95,7 @@ void loop() {
     break;
     case MOVE_TO_BLUE: // move to red
       if (blueCount == 0){
-        Storage(mode, POINT_blueStorageHigh, POINT_blueStorageSpace1, 1000);
+        Storage(mode, POINT_blueStorageHigh, POINT_blueStorageSpace1, 2000);
         blueCount++;
         Serial.print("Moving to Blue Storage\r\n");
         state = READY;
@@ -104,7 +103,7 @@ void loop() {
       }
 
       if (blueCount == 1){
-        Storage(mode, POINT_blueStorageHigh, POINT_blueStorageSpace2, 1000);
+        Storage(mode, POINT_blueStorageHigh, POINT_blueStorageSpace2, 2000);
         blueCount++;
         Serial.print("Blue Block Stored\r\n");
         state = READY;
@@ -112,7 +111,7 @@ void loop() {
       }
 
       if (blueCount == 2){
-        Storage(mode, POINT_blueStorageHigh, POINT_blueStorageSpace3, 1000);
+        Storage(mode, POINT_blueStorageHigh, POINT_blueStorageSpace3, 2000);
         blueCount++;
         Serial.print("Blue Block Stored\r\n");
         state = READY;
@@ -128,7 +127,7 @@ void loop() {
 
     case MOVE_TO_GREEN: // move to green
       if (greenCount == 0){
-        Storage(mode, POINT_greenStorageHigh, POINT_greenStorageSpace1, 1000);
+        Storage(mode, POINT_greenStorageHigh, POINT_greenStorageSpace1, 2000);
         greenCount++;
         Serial.print("Moving to Green Storage\r\n");
         state = READY;
@@ -136,7 +135,7 @@ void loop() {
       }
 
       if (greenCount == 1){
-        Storage(mode, POINT_greenStorageHigh, POINT_greenStorageSpace2, 1000);
+        Storage(mode, POINT_greenStorageHigh, POINT_greenStorageSpace2, 2000);
         greenCount++;
         Serial.print("Green Block Stored\r\n");
         state = READY;
@@ -144,7 +143,7 @@ void loop() {
       }
 
       if (greenCount == 2){
-        Storage(mode, POINT_greenStorageHigh, POINT_greenStorageSpace3, 1000);
+        Storage(mode, POINT_greenStorageHigh, POINT_greenStorageSpace3, 2000);
         greenCount++;
         Serial.print("Green Block Stored\r\n");
         state = READY;
@@ -159,7 +158,7 @@ void loop() {
      
     case MOVE_TO_RED: // move to blue
       if (redCount == 0){
-        Storage(mode, POINT_redStorageHigh, POINT_redStorageSpace1, 1000);
+        Storage(mode, POINT_redStorageHigh, POINT_redStorageSpace1, 2000);
         redCount++;
         Serial.print("Moving to Red Storage\r\n");
         state = READY;
@@ -167,7 +166,7 @@ void loop() {
       } 
 
       if (redCount == 1){
-        Storage(mode, POINT_redStorageHigh, POINT_redStorageSpace2, 1000);
+        Storage(mode, POINT_redStorageHigh, POINT_redStorageSpace2, 2000);
         redCount++;
         Serial.print("Red Block Stored\r\n");
         state = READY;
@@ -175,7 +174,7 @@ void loop() {
       } 
 
       if (redCount == 2){
-        Storage(mode, POINT_redStorageHigh, POINT_redStorageSpace3, 1000);
+        Storage(mode, POINT_redStorageHigh, POINT_redStorageSpace3, 2000);
         redCount++;
         Serial.print("Red Block Stored\r\n");
         state = READY;
@@ -192,7 +191,7 @@ void loop() {
     case RETRIEVE_BLUE_BLOCK: // retrieve block
 
       if (blueCount == 3) {
-        Retrieve(mode, POINT_blueStorageHigh, POINT_blueStorageSpace3, 1000);
+        Retrieve(mode, POINT_blueStorageHigh, POINT_blueStorageSpace3, 2000);
         blueCount = 2;
         Serial.print("Blue Block Retrieved from pos 3\r\n");
         state = READY;
@@ -200,7 +199,7 @@ void loop() {
       }
     
       if (blueCount == 2){
-        Retrieve(mode, POINT_blueStorageHigh, POINT_blueStorageSpace2, 1000);
+        Retrieve(mode, POINT_blueStorageHigh, POINT_blueStorageSpace2, 2000);
         Serial.print("Blue Block Retrieved from pos 2\r\n");
         blueCount = 1;
         state = READY;
@@ -208,7 +207,7 @@ void loop() {
       }
 
       if (blueCount == 1){
-        Retrieve(mode, POINT_blueStorageHigh, POINT_blueStorageSpace1, 1000);  
+        Retrieve(mode, POINT_blueStorageHigh, POINT_blueStorageSpace1, 2000);  
         blueCount = 0;
         Serial.print("Blue Block Retrieved from pos 1\r\n");
         state = READY;
@@ -225,7 +224,7 @@ void loop() {
     case RETRIEVE_GREEN_BLOCK: // retrieve block
     
       if (greenCount == 3) {
-        Retrieve(mode, POINT_greenStorageHigh, POINT_greenStorageSpace3, 1000);
+        Retrieve(mode, POINT_greenStorageHigh, POINT_greenStorageSpace3, 2000);
         greenCount = 2;
         Serial.print("Green Block Retrieved from pos 3\r\n");
         state = READY;
@@ -233,7 +232,7 @@ void loop() {
       }
 
       if (greenCount == 2){
-        Retrieve(mode, POINT_greenStorageHigh, POINT_greenStorageSpace2, 1000);
+        Retrieve(mode, POINT_greenStorageHigh, POINT_greenStorageSpace2, 2000);
         Serial.print("Green Block Retrieved from pos 2\r\n");
         greenCount = 1;
         state = READY;
@@ -241,7 +240,7 @@ void loop() {
       }
 
       if (greenCount == 1){
-        Retrieve(mode, POINT_greenStorageHigh, POINT_greenStorageSpace1, 1000);  
+        Retrieve(mode, POINT_greenStorageHigh, POINT_greenStorageSpace1, 2000);  
         greenCount = 0;
         Serial.print("Green Block Retrieved from pos 1\r\n");
         state = READY;
@@ -257,15 +256,15 @@ void loop() {
 
     case RETRIEVE_RED_BLOCK: // retrieve block
       if (redCount == 3) {
-        Retrieve(mode, POINT_redStorageHigh, POINT_redStorageSpace3, 1000);
-        redCount == 2;
+        Retrieve(mode, POINT_redStorageHigh, POINT_redStorageSpace3, 2000);
+        redCount = 2;
         Serial.print("Red Block Retrieved from pos 3\r\n");
         state = READY;
         break;
       }
 
       if (redCount == 2){
-        Retrieve(mode, POINT_redStorageHigh, POINT_redStorageSpace2, 1000);
+        Retrieve(mode, POINT_redStorageHigh, POINT_redStorageSpace2, 2000);
         Serial.print("Red Block Retrieved from pos 2\r\n");
         redCount = 1;
         state = READY;
@@ -273,7 +272,7 @@ void loop() {
       }
 
       if (redCount == 1){
-        Retrieve(mode, POINT_redStorageHigh, POINT_redStorageSpace1, 1000);  
+        Retrieve(mode, POINT_redStorageHigh, POINT_redStorageSpace1, 2000);  
         redCount = 0;
         Serial.print("Red Block Retrieved from pos 1\r\n");
         state = READY;

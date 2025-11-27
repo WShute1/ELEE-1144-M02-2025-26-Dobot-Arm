@@ -46,6 +46,8 @@ void loop() {
     break;
 
     case READY: // detect block
+       Serial.print("Ready \r\n");
+       _delay_ms(75);
        object = Detect(); // Call Detect function
        if(object == true){
           state = IDENTIFY_BLOCK_COLOUR;

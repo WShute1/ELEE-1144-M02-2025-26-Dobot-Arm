@@ -1,4 +1,4 @@
-#define SAMPLE_COUNT 100  // Number of colour readings taken
+#define SAMPLE_COUNT 50  // Number of colour readings taken
 
 #include <avr/io.h>
 #include <util/delay.h>
@@ -117,21 +117,21 @@ int Detect_colour()
         // Threshold-based colour classification:
         // These values come from tuning/experimentation
 
-        if (Red < Blue && Red <= Green && Red < 120) {
-            colourSamples[i] = RED;
-        }
-        else if (Red + Blue + Green <= 232) {
-            colourSamples[i] = WOODEN;          // Low RGB sum means brownish/wood colour
-        }
-        else if (Blue < Green && Blue < Red && Blue < 130) {
-            colourSamples[i] = BLUE;
-        }
-        else if (Green < Red && (Blue - Green) <= 50 && Green < 180) {
-            colourSamples[i] = GREEN;
-        }
-        else {
-            colourSamples[i] = OUTOFRANGE;      // No known colour fits thresholds
-        }
+             if (Red < Blue && Red <= Green && Red < 120 && Green > 140 && Blue > 140) {
+                colourSamples[i] = RED;
+            }
+            else if (Red < Blue && Red <= Green && Red < 120 && Green < 140 && Blue < 140) {
+                colourSamples[i] = WOODEN;
+            }
+            else if (Blue < Green && Blue < Red && Blue < 130) {
+                colourSamples[i] = BLUE;
+            }
+            else if (Green < Red && (Blue - Green) <= 50 && Green < 180) {
+                colourSamples[i] = GREEN;
+            }
+            else {
+                colourSamples[i] = OUTOFRANGE;
+            }
 
         _delay_ms(10);                          // Small delay between samples
     }

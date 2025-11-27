@@ -78,7 +78,7 @@ void loop() {
     case IDENTIFY_BLOCK_COLOUR: // detect block colour
       colour = Detect_colour(); // Call colour detection function
 
-      if (colour == 5){
+      if (colour == 1){
         Serial.print("Red Block Detected\r\n");
         state = MOVE_TO_RED;
       }

@@ -1,3 +1,5 @@
+// Reference to the libraries the program requires to function.
+// including the project libraries, arduino library and std c libraries
 #include <Dobot.h>
 #include <string.h>
 #include <Button.h>
@@ -7,16 +9,24 @@
 #include <US.h>
 #include <coordinates.h>
 #include <RGB.h>
-#include<Arduino.h>
+#include <Arduino.h>
 
 
-Dobot myDobot;
+Dobot myDobot; //Create an object of the class Dobot and name it myDobot
 
-enum States { INITIALISE, READY, IDENTIFY_BLOCK_COLOUR, MOVE_TO_RED, MOVE_TO_GREEN, MOVE_TO_BLUE, RETRIEVE_RED_BLOCK, RETRIEVE_GREEN_BLOCK, RETRIEVE_BLUE_BLOCK };
-States state = INITIALISE;
+/*Define the a enum variable type with 9 different keywords, each 
+  will be used to determine the state of the finite state machine used
+  in the main control loop of the code*/
+enum States { INITIALISE, READY, IDENTIFY_BLOCK_COLOUR, MOVE_TO_RED,
+              MOVE_TO_GREEN, MOVE_TO_BLUE, RETRIEVE_RED_BLOCK,
+              RETRIEVE_GREEN_BLOCK, RETRIEVE_BLUE_BLOCK 
+            };
+States state = INITIALISE; //create a variable of the States datatype
 
 
-
+/*This function is called when the ardunio resets or at initial power on
+  It calls a few functions designed to start the dobot in a known state,
+  initate the sensor modules and inform the user of this process*/
 void setup() {
   myDobot.begin();
   button_init();

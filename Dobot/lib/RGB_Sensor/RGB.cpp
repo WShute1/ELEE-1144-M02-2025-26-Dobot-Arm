@@ -23,11 +23,11 @@ enum COLOUR {
 // OUT = PB4 -> Sensor output: square wave frequency proportional to light intensity
 
 // Macros to easily set/clear control pins on the AVR
-#define S0_HIGH (PORTB |= (1<<PB0)) // Set PD0 HIGH
-#define S0_LOW  (PORTB &= ~(1<<PB0))// Set PD0 LOW
+#define S0_HIGH (PORTB |= (1<<PB0)) // Set PB0 HIGH
+#define S0_LOW  (PORTB &= ~(1<<PB0))// Set PB0 LOW
 
-#define S1_HIGH (PORTB |= (1<<PB1)) // Set PD1 HIGH
-#define S1_LOW  (PORTB &= ~(1<<PB1))// Set PD1 LOW
+#define S1_HIGH (PORTB |= (1<<PB1)) // Set PB1 HIGH
+#define S1_LOW  (PORTB &= ~(1<<PB1))// Set PB1 LOW
 
 #define S2_HIGH (PORTB |= (1<<PB2)) // Set PB2 HIGH (select colour filter)
 #define S2_LOW  (PORTB &= ~(1<<PB2))// Set PB2 LOW
@@ -92,7 +92,7 @@ void ColourSensor_Init(void){
 
     // Timer1 configuration:
     TCCR1A = 0;                       // Normal mode (not PWM)
-    TCCR1B = (1 << CS10);             // No prescaler → timer ticks at CPU frequency (max precision)
+    TCCR1B = (1 << CS10);             // No prescaler → timer ticks at every 16MHz clock pulse
 
     // Set TCS3200 to 100% output frequency scaling:
     S0_HIGH;                          // S0=1
